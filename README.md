@@ -1,38 +1,106 @@
 # Project 2 ETLs
 ## Team 8
 
-Linking GDP (Gross Domestic Product) as an estimate of wealth by county; and then determinig how that compares to life expectency, unemployment, educational levels. Is it related?
+### Original Project Task
+Working with a partner, we were asked to complete the ETL (Extract, Transform, and Load) process on a dataset of our choosing. We were asked to determine our data sources, extract the data, transform the data, and then load it into a database.
 
-Utilizing the ETL (Extract, Transform, and Load) process the data to look at how the counties are related.  
+## Our Project
+We have been asked to consult for a new start up PyGoods.  PyGoods are looking to determine the best locaiton for their new business model that containes different goods and services.  The focus of PyGoods is to do Good for their new community.  We have been brought in to help look at the GDP (Gross Domestic Product) as an estimate of wealth by county; and then determinig how that compares to life expectency, unemployment, educational levels. 
+
+Utilizing the ETL process the data to look at how the counties are related, and help PyGoods determine their top locaiton choices for PyGoods.   
 
 ### Team Members
 - Megan Blazevic
 - Omar Espinoza
 
 ## Proposal
-Type of final production database (relational or non-relational) that the data will be loaded into.  
-Gives a relevant and succinct descrription of findings.
+Creating PyGoods a relational database to query the FIPS (Federal Information Processing Series) code in relation to life expectency, poverty estimates, and educational status; so a new headquarters can be created.  
 
 ### Sources
- 1. Kaggle - GDB data source https://www.kaggle.com/datasets/thedevastator/the-u-s-counties-with-the-highest-gdp
- 2. CDC - Life Expentency https://www.cdc.gov/nchs/data-visualization/life-expectancy/index.html 
- 3. BEA - GDB Data Source https://www.bea.gov/data/gdp/gdp-county-metro-and-other-areas
- 4. USDA - Education & Unemployment https://www.ers.usda.gov/data-products/county-level-data-sets/county-level-data-sets-download-data/
- 
+ 1. Gross Domestic Product by County data came from ArcGIS Hub 
+    https://hub.arcgis.com/datasets/esri::gross-domestic-product-gdp-by-county-2012-to-2015/explore
+ 2. Life Expectancy (mortality risk) data came from DataWorld 
+    https://data.world/   ************do we have an acutal link to the data ********
+ 3. Poverty estimates for the US, States and Counties data come from the US Department of Agriculture - Economic Research Service 
+     https://www.ers.usda.gov/webdocs/DataFiles/48747/PovertyEstimates.xlsx?v=1600.8
+ 4. Educational Attainment for Adults Age 25 and Older data came from the US Department of Agriculture - Economic Research Service 
+    https://www.ers.usda.gov/webdocs/DataFiles/48747/Education.xlsx?v=1600.8
+ 5. List of County and State FIPS codes came from the US Census Bureau 
+    https://www.census.gov/library/reference/code-lists/ansi.html#county
+ 6. List of State Abbreviations came form the Census Bureau
+    https://www2.census.gov/geo/docs/reference/state.txt
 
-## Report
+ ## Report
+Once we focused on the topic of data surrounding Gross Domestic Product, we started to look for various data sources. Once we found our GDP data, we thought about what could be connected to that data to help drive the the variations.  We decided to look into life expectency, education level, and poverty estimates for each county across the United States.
+
 1. #### Extract
-    Describe original data source and how the data was formatted.
+We obtained our .csv data files from several different sites. After inspecting several of our data sets (looking for completeness, ease of use, data variables, etc.); a few of our original sources (a Kaggle data sete for GDP and a Center for Disease Control and Prevention data set for life expectency) were abondanded and new sources were obtained.  The Kaggle data was in an excel .xlsx data set that was more difficult to use, so an alternitive source was sought out. The CDC data set was abanded as it didn't have the FIPS code.  In hindsight, we could have continued with this data set and linked it with other informaiton to add the FIPS code in with the informaiton as the FIPS code is our primary key. 
+
+    * GDP by County, Metro, and Other Areas
+        Change file name (short, no spaces)
+        Decide which columns to keep. 
+            NAME
+            STATE_NAME
+            FIPS?
+            CD_GDP2015_All
+    * Life Expectancy 
+        Change file name (short, no spaces)
+        Decide which columns to keep.
+            Location
+            FIPS
+            County
+            Life expectancy, 2014*
+        Change headers: simplify and eliminate spaces, special characters
+        Break “Location” column in two: State and County
+        Extract first number from life expectancy column (e.g. “79.08” from “79.08 (79.04, 79.11)”)
+        Delete all rows with “blank” as county (these are totals for each state)
+    * Poverty estimates for the U.S., States, and counties, 2020
+        Change file name (short, no spaces)
+        Convert from XLSX to CSV file (done)
+        Select which columns we want to keep among these (explanation in the spreadsheet). 
+            Stabr (contains state initials)
+            Area_name (county)
+            PCTPOVALL_2020 (Estimated percent of people of all ages in poverty 2020)
+        Eliminate first row of data (contains the totals for the US)
+        Eliminate columns we don’t want
+        Change headers: simplify and eliminate spaces
+    * Educational attainment for adults age 25 and older for the U.S., States, and counties, 1970–2020
+        Change file name (short, no spaces)
+        Convert from XLSX to CSV file
+        Select which columns we want to keep among these (they are self-explanatory). Maybe:
+            Federal Information Processing Standard (FIPS) Code
+            State	
+            Area name
+            Percent of adults with a high school diploma only, 2016-20
+            Percent of adults with a bachelor's degree or higher 2015-19
+        Eliminate first row of data (contains the totals for the US)
+        Delete rows without data (e.g., “Chugach Census Area, Alaska”)
+        Eliminate columns we don’t want
+        Change headers: simplify and eliminate spaces
+
+The data was pulled into our jupyter notebook; and utilizing pandas we read in our data files.
  
 2. #### Transform
-    Explain what data cleaning or transformation was performed and why it was needed.
+As we were utilizing various data sets, we needed to clean up the data to work best for our PyGoods analysis. Transformation is done to clean the data to make it complete and consice data. Basic formating was done to most of the data sets to clean.  This would include adding underscores, and taking out dashes and spaces; ensuring that each column had headers; adjusting column names to make them shorter, but still ensuring that they were appropriate indicators of the columns.  Extracting the State out of the combined County, State fields.  Extra columns with older data (previous years) and unnecessary informaiton was ommitted from our data set.  Extracting of the first number (average life expectency) from 3 different values (showing average, male average, and female averages). Data with null values were dropped as well. 
 
-    Life expectancy data will need to be cleaned by county to match the county pull from the GDP data set.
-    Unemployment and education level would be merged together upon county.
+We discussed taking out the state level data (all the FIPS that end in 000), to only show the US counties.  Ultimately we decided to keep the state roll-up summary in the data.  This can be filtered out during the database options, and used to help narrow down different states or regions.  With their being 3241 FIPS codes across the country; using the state level FIPS, will help to narrow down the data dive.
 
+All of the data sets (GDP, life expectency, poverty, and education level) were all joined via a .merge option.  Then data cleaning was done again to delete duplicate rows, reordering of the data columns, and deleting of the duplicate columns.
 
 3. #### Load
-    Describe the structure of the final database along with any improvements that could be made for the future.
+Our schemata is fairly simple.  We have 1 table; as our original data sets were all able to be connected through the primary key of the FIPS.  As the FIPS is an easy identifier (just 4-5 characters), and it was in all of the data sets, it made merging our data set ideal. We didn't have to link any of the tables together to accomplish the data loading. 
+************Add schemata load**************
+
+Future Adjustments.  
+Once PyGoods has solidified its location and built their headquarters, they would be able to load in new data as to the headquarters county; to see if they were able to do good - by affecting some of the benchmarking stats (life expectency, GDP, educaiton level, poverty status).
 
 ### Limitations
-Ensuring that all the data is looking at the same time frame, or assumptions need to be made.
+Working with data sets of the same year. Many of the trends did not very much by years, so we were able to use various years in our data set.  Ideally, using all data from a specific year, or yearly range; would have been ideal.
+
+### Sample Queries  
+Here is a sampling of some of the data queries that can easily be done with our relational database.
+*************** add images - once they are pulled****************
+*****Possible Options******
+pick 1 state and show the data for all benchmarking states.
+data set of some mid-west states (filter by FIPS)
+
