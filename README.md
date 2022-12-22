@@ -132,7 +132,23 @@ To load the data into the data set; we connected to our relational database.
 ### Sample Queries  
 Here is a sampling of some of the data queries that can easily be done with our relational database.
 
-****************
+  -- Average percent of population with less than high school education and average poverty
+  SELECT "State", round(AVG("Less_than_HS")::numeric,2) AS "Average pct with less than High School", round(AVG("Poverty_pct")::numeric,2) AS "Average Poverty"
+  FROM human_development_indicators
+  GROUP BY "State"
+  ORDER BY "State";
+  
+  <img width="324" alt="Education and Poverty by State" src="https://user-images.githubusercontent.com/113635771/209038557-d83eb067-7511-480b-87c2-523d564737a0.PNG">
+
+  -- Average percent of population with BS or higher and GDP in Minnesota
+  SELECT "County", round(AVG("BS_or_higher")::numeric,2) AS "Average pct with BS-higher", round(round(AVG("GDP_2015")::numeric,0)/1000000,2) AS "Average GDP (million $)"
+  FROM human_development_indicators
+  WHERE "State" = 'MN'
+  GROUP BY "County"
+  ORDER BY "County";
+    
+   <img width="373" alt="Education and GDP Minnesota" src="https://user-images.githubusercontent.com/113635771/209038667-2878b850-e40b-4911-9af4-e100028ae7cd.PNG">
+
 
 ### Future Adjustments.  
 Once PyGoods has solidified its location and built their headquarters, they would be able to load in new data as to the headquarters county; to see if they were able to do good within the community, by influencing some of the benchmarking stats (life expectency, GDP, educaiton level, poverty status).
