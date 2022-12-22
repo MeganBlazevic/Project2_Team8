@@ -129,7 +129,7 @@ To load the data into the data set; we connected to our relational database.
     - Import squalachemy and create engine
     - Load main dataframe into SQL table.
 
-
+ ![create table](https://user-images.githubusercontent.com/113635771/209042002-e19cc78d-31b0-4867-91ec-7333a6e28b43.png)
 
 ### Sample Queries  
 Here is a sampling of some of the data queries that can easily be done with our relational database.
